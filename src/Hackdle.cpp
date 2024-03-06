@@ -1,11 +1,10 @@
-#include <cstring>
 #include <algorithm>
-#include <format>
-#include <string>
-#include <array>
 #include <iostream>
+#include <cstring>
+#include <string>
+#include <format>
+#include <array>
 
-#include "wordlist.hpp"
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
 

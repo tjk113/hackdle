@@ -22,11 +22,11 @@
     <ClCompile Include="src\Hackdle.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\TerminalColor.cpp" />
+    <ClCompile Include="src\wordlist.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Hackdle.hpp" />
     <ClInclude Include="include\TerminalColor.hpp" />
-    <ClInclude Include="include\wordlist.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -17,6 +17,8 @@ public:
 		WrongPosition,
 		Absent
 	};
+	static constexpr int wordlist_length = 14855;
+	static const std::string wordlist[wordlist_length];
 private:
 	std::unordered_map<std::string, std::array<LetterResult,5>> guesses;
 	std::string correct_answer;
