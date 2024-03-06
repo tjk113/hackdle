@@ -9,19 +9,24 @@
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
 
+//Randomly pick the word that needs to be guessed
 Hackdle::Hackdle(std::string correct_answer) {
+	//Make all input lower case for comparisons
 	std::transform(correct_answer.begin(), correct_answer.end(), correct_answer.begin(), ::tolower);
 	this->correct_answer = correct_answer;
 	this->complete = false;
 }
 
+//Check to make sure user is inputting a letter
 bool Hackdle::is_valid_character(char c){
 	return c <= 122 && c >= 97;
 }
 
-bool Hackdle::is_in_word_list(std::string guess) {
-	bool is_in_list = true;
+//Check to see if the word guessed is a possible answer
+bool Hackdle::is_in_word_list(std::string guess){
+	//iterate through wordlist
 	for(int i = 0; i < Hackdle::wordlist_length; i++){
+		//If it's in wordlist return true
 		if (guess == this->wordlist[i]) {
 			return true;
 		}
@@ -30,6 +35,7 @@ bool Hackdle::is_in_word_list(std::string guess) {
 }
 
 bool Hackdle::guess(std::string guess) {
+	//Error handling wooo
 	if (guess.length() > 5)
 		throw Hackdle::Error::GuessTooLong;
 	if(guess.length() < 5){
@@ -38,20 +44,24 @@ bool Hackdle::guess(std::string guess) {
 	if(!is_in_word_list(guess)){
 		throw Hackdle::Error::NotInWordList;
 	}
-	
 
-	std::array<LetterResult,5> letter_results = {};
+	//Initialize letter results array (With respect to memory)
+	std::array<LetterResult, 5> letter_results = {};
 
 	for(int i = 0; i < guess.length(); i++){
+		//Throw error if input is not valid
 		if(!is_valid_character(guess[i])){
 			throw Hackdle::Error::InvalidCharacter;
 		}
+		//Check if the letter is correct and in the correct position
 		if(guess[i] == correct_answer[i]){
 			letter_results[i] = LetterResult::CorrectPosition;
 		}
+		//Check if letter is in word but wrong position
 		else if(correct_answer.find(guess[i]) != std::string::npos){
 			letter_results[i] = LetterResult::WrongPosition;
 		}
+		//Check if letter is completely absent
 		else {
 			letter_results[i] = LetterResult::Absent;
 		}
@@ -66,7 +76,9 @@ bool Hackdle::is_complete() {
 	return this->complete;
 }
 
-//TODO clear screen 
+//TODO: clear screen 
+//Tyler you should do this, thanks :)
+//Print out guesses with correct coloring
 void Hackdle::print() {
 	for (const auto& guess : this->guesses) {
 		TerminalColor::Color color = TerminalColor::Black;
