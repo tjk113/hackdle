@@ -5,6 +5,7 @@
 #include <array>
 #include <iostream>
 
+#include "wordlist.hpp"
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
 

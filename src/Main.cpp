@@ -9,6 +9,10 @@
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
 
+#include "wordlist.hpp"
+
+
+
 void enable_terminal_escape_sequences(HANDLE stdout_handle) {
 	DWORD console_mode;
 	GetConsoleMode(stdout_handle, &console_mode);
@@ -16,14 +20,23 @@ void enable_terminal_escape_sequences(HANDLE stdout_handle) {
 	SetConsoleMode(stdout_handle, console_mode);
 }
 
+int randomNum(int min, int max)
+{
+	static bool first = true;
+	if (first)
+	{
+		srand(time(NULL));
+		first = false;
+	}
+	return min + rand() % ((max + 1) - min);
+}
+
 int main() {
 	// We have to set this console mode to enable ANSI escape sequences
 	HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	enable_terminal_escape_sequences(stdout_handle);
-
-	std::string words[] = {"crane", "guide", "spite"};
-
-	Hackdle hackdle = Hackdle("prank");
+	int random =randomNum(0,WORDLISTLENGTH);
+	Hackdle hackdle = Hackdle(wordlist[random]);
 	std::string guess;
 	while (!hackdle.is_complete()) {
 		std::getline(std::cin, guess);

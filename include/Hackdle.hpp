@@ -8,7 +8,9 @@ class Hackdle {
 public:
 	enum class Error {
 		GuessTooLong,
-		InvalidCharacter
+		GuessTooSort,
+		InvalidCharacter,
+		NotInWordList
 	};
 	enum class LetterResult {
 		CorrectPosition,
