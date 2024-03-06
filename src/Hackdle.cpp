@@ -3,6 +3,7 @@
 #include <cstring>
 #include <string>
 #include <format>
+#include <tuple>
 #include <array>
 
 #include "TerminalColor.hpp"
@@ -18,14 +19,13 @@ bool Hackdle::is_valid_character(char c){
 	return c <= 90 && c >= 65;
 }
 
-std::array<Hackdle::LetterResult,5> Hackdle::guess(std::string guess) {
+bool Hackdle::guess(std::string guess) {
 	if (guess.length() > 5)
 		throw Hackdle::Error::GuessTooLong;
+
 	std::array<LetterResult,5> letter_results = {};
 
-	// TODO: get LetterResult for each letter
 	for(int i = 0; i < guess.length(); i++){
-
 		if(!is_valid_character(guess[i])){
 			throw Hackdle::Error::InvalidCharacter;
 		}
@@ -40,9 +40,7 @@ std::array<Hackdle::LetterResult,5> Hackdle::guess(std::string guess) {
 		}
 	}
 
-	this->guesses.insert({guess, letter_results});
-
-	return letter_results;
+	this->guesses.emplace_back(std::make_tuple(guess, letter_results));
 }
 
 bool Hackdle::is_complete() {
@@ -53,8 +51,8 @@ bool Hackdle::is_complete() {
 void Hackdle::print() {
 	for (const auto& guess : this->guesses) {
 		TerminalColor::Color color = TerminalColor::Black;
-		for (int i = 0; i < guess.first.length(); i++) {
-			switch (guess.second[i]) {
+		for (int i = 0; i < std::get<0>(guess).length(); i++) {
+			switch (std::get<1>(guess)[i]) {
 				case LetterResult::CorrectPosition:
 					color = TerminalColor::Green;
 					break;
@@ -65,7 +63,7 @@ void Hackdle::print() {
 					color = TerminalColor::Black;
 					break;
 			}
-			TerminalColor::print(std::format(" {} ", guess.first[i]), color, (color == TerminalColor::Black ? true : false));
+			TerminalColor::print(std::format(" {} ", std::get<0>(guess)[i]), color, (color == TerminalColor::Black ? true : false));
 		}
 		std::cout << std::endl;
 	}

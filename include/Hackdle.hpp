@@ -1,8 +1,10 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <tuple>
 #include <array>
-#include <unordered_map>
+#include <map>
 
 class Hackdle {
 public:
@@ -20,13 +22,13 @@ public:
 	static constexpr int wordlist_length = 14855;
 	static const std::string wordlist[wordlist_length];
 private:
-	std::unordered_map<std::string, std::array<LetterResult,5>> guesses;
+	std::vector<std::tuple<std::string, std::array<LetterResult,5>>> guesses;
 	std::string correct_answer;
 	bool complete;
 	bool is_valid_character(char c);
 public:
 	Hackdle(std::string correct_answer);
 	void print();
-	std::array<LetterResult,5> guess(std::string guess);
+	bool guess(std::string guess);
 	bool is_complete();
 };

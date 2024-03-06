@@ -8,7 +8,6 @@
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
 
-
 void enable_terminal_escape_sequences(HANDLE stdout_handle) {
 	DWORD console_mode;
 	GetConsoleMode(stdout_handle, &console_mode);
