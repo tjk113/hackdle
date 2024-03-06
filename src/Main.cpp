@@ -20,7 +20,14 @@ int main() {
 
 	std::string words[] = {"crane", "guide", "spite"};
 
+	Hackdle hackdle = Hackdle("prank");
 	std::string guess;
+	while (!hackdle.is_complete()) {
+
+		std::getline(std::cin, guess);
+
+	}
+
 
 	TerminalColor::print(" H ", TerminalColor::Black, true);
 	TerminalColor::print(" e ", TerminalColor::Black, true);
