@@ -19,7 +19,7 @@ Hackdle::Hackdle(std::string correct_answer) {
 
 //Check to make sure user is inputting a letter
 bool Hackdle::is_valid_character(char c){
-	return c <= 122 && c >= 97;
+	return c >= 97 && c <= 122;
 }
 
 //Check to see if the word guessed is a possible answer
@@ -27,7 +27,7 @@ bool Hackdle::is_in_word_list(std::string guess){
 	//iterate through wordlist
 	for(int i = 0; i < Hackdle::wordlist_length; i++){
 		//If it's in wordlist return true
-		if (guess == this->wordlist[i]) {
+		if(guess == this->wordlist[i]){
 			return true;
 		}
 	}
@@ -39,10 +39,7 @@ bool Hackdle::guess(std::string guess) {
 	if (guess.length() > 5)
 		throw Hackdle::Error::GuessTooLong;
 	if(guess.length() < 5){
-		throw Hackdle::Error::GuessTooSort;
-	}
-	if(!is_in_word_list(guess)){
-		throw Hackdle::Error::NotInWordList;
+		throw Hackdle::Error::GuessTooShort;
 	}
 
 	//Initialize letter results array (With respect to memory)
@@ -65,6 +62,10 @@ bool Hackdle::guess(std::string guess) {
 		else {
 			letter_results[i] = LetterResult::Absent;
 		}
+	}
+
+	if (!is_in_word_list(guess)) {
+		throw Hackdle::Error::NotInWordList;
 	}
 
 	this->guesses.emplace_back(std::make_tuple(guess, letter_results));

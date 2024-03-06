@@ -37,7 +37,25 @@ int main() {
 	while (!hackdle.is_complete()) {
 		std::getline(std::cin, guess);
 		std::transform(guess.begin(), guess.end(), guess.begin(), ::tolower);
-		hackdle.guess(guess);
+		try {
+			hackdle.guess(guess);
+		}
+		catch (Hackdle::Error e) {
+			switch (e) {
+				case Hackdle::Error::GuessTooShort:
+					std::cout << "Error: guess too short" << std::endl;
+					continue;
+				case Hackdle::Error::GuessTooLong:
+					std::cout << "Error: guess too long" << std::endl;
+					continue;
+				case Hackdle::Error::InvalidCharacter:
+					std::cout << "Error: invalid character in guess" << std::endl;
+					continue;
+				case Hackdle::Error::NotInWordList:
+					std::cout << "Error: guess not in word list" << std::endl;
+					continue;
+			}
+		}
 		hackdle.print();
 	}
 	std::cout << std::endl;

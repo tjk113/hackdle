@@ -12,7 +12,7 @@ class Hackdle {
 public:
 	enum class Error {
 		GuessTooLong,
-		GuessTooSort,
+		GuessTooShort,
 		InvalidCharacter,
 		NotInWordList
 	};
