@@ -1,5 +1,8 @@
 #include <Windows.h>
 
+#include <cstring>
+#include <algorithm>
+
 #include <iostream>
 #include <string>
 
@@ -23,17 +26,13 @@ int main() {
 	Hackdle hackdle = Hackdle("prank");
 	std::string guess;
 	while (!hackdle.is_complete()) {
-
 		std::getline(std::cin, guess);
+		std::transform(guess.begin(), guess.end(), guess.begin(), ::toupper);
+		hackdle.guess(guess);
+		hackdle.print();
 
 	}
 
-
-	TerminalColor::print(" H ", TerminalColor::Black, true);
-	TerminalColor::print(" e ", TerminalColor::Black, true);
-	TerminalColor::print(" l ", TerminalColor::Yellow);
-	TerminalColor::print(" l ", TerminalColor::Black, true);
-	TerminalColor::print(" o ", TerminalColor::Green);
 	std::cout << std::endl;
 
 	CloseHandle(stdout_handle);

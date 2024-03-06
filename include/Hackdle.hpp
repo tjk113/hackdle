@@ -2,12 +2,13 @@
 
 #include <string>
 #include <array>
-#include <map>
+#include <unordered_map>
 
 class Hackdle {
 public:
-	enum Error {
-		GuessTooLong
+	enum class Error {
+		GuessTooLong,
+		InvalidCharacter
 	};
 	enum class LetterResult {
 		CorrectPosition,
@@ -15,9 +16,10 @@ public:
 		Absent
 	};
 private:
-	std::map<std::string, std::array<LetterResult,5>> guesses;
+	std::unordered_map<std::string, std::array<LetterResult,5>> guesses;
 	std::string correct_answer;
 	bool complete;
+	bool is_valid_character(char c);
 public:
 	Hackdle(std::string correct_answer);
 	void print();
