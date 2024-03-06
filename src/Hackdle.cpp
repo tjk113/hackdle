@@ -41,6 +41,8 @@ bool Hackdle::guess(std::string guess) {
 	}
 
 	this->guesses.emplace_back(std::make_tuple(guess, letter_results));
+
+	return guess == this->correct_answer;
 }
 
 bool Hackdle::is_complete() {
