@@ -10,18 +10,35 @@
 #include "Hackdle.hpp"
 
 Hackdle::Hackdle(std::string correct_answer) {
-	std::transform(correct_answer.begin(), correct_answer.end(), correct_answer.begin(), ::toupper);
+	std::transform(correct_answer.begin(), correct_answer.end(), correct_answer.begin(), ::tolower);
 	this->correct_answer = correct_answer;
 	this->complete = false;
 }
 
 bool Hackdle::is_valid_character(char c){
-	return c <= 90 && c >= 65;
+	return c <= 122 && c >= 97;
+}
+
+bool Hackdle::is_in_word_list(std::string guess) {
+	bool is_in_list = true;
+	for(int i = 0; i < Hackdle::wordlist_length; i++){
+		if (guess == this->wordlist[i]) {
+			return true;
+		}
+	}
+	return false;
 }
 
 bool Hackdle::guess(std::string guess) {
 	if (guess.length() > 5)
 		throw Hackdle::Error::GuessTooLong;
+	if(guess.length() < 5){
+		throw Hackdle::Error::GuessTooSort;
+	}
+	if(!is_in_word_list(guess)){
+		throw Hackdle::Error::NotInWordList;
+	}
+	
 
 	std::array<LetterResult,5> letter_results = {};
 

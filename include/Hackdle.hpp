@@ -5,6 +5,8 @@
 #include <tuple>
 #include <array>
 #include <map>
+#include <cstring>
+#include <algorithm>
 
 class Hackdle {
 public:
@@ -26,6 +28,7 @@ private:
 	std::string correct_answer;
 	bool complete;
 	bool is_valid_character(char c);
+	bool is_in_word_list(std::string guess);
 public:
 	Hackdle(std::string correct_answer);
 	void print();

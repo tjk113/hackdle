@@ -36,7 +36,7 @@ int main() {
 	std::string guess;
 	while (!hackdle.is_complete()) {
 		std::getline(std::cin, guess);
-		std::transform(guess.begin(), guess.end(), guess.begin(), ::toupper);
+		std::transform(guess.begin(), guess.end(), guess.begin(), ::tolower);
 		hackdle.guess(guess);
 		hackdle.print();
 	}
