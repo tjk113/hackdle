@@ -32,6 +32,6 @@ private:
 public:
 	Hackdle(std::string correct_answer);
 	void print();
-	bool guess(std::string guess);
+	void guess(std::string guess);
 	bool is_complete();
 };

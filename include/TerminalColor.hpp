@@ -14,4 +14,5 @@ namespace TerminalColor {
 		White
 	};
 	void print(std::string string, TerminalColor::Color background, bool bright_background = false, TerminalColor::Color foreground = TerminalColor::Color::White);
+	void clear();
 };

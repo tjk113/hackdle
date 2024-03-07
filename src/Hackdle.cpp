@@ -34,7 +34,7 @@ bool Hackdle::is_in_word_list(std::string guess){
 	return false;
 }
 
-bool Hackdle::guess(std::string guess) {
+void Hackdle::guess(std::string guess) {
 	//Error handling wooo
 	if (guess.length() > 5)
 		throw Hackdle::Error::GuessTooLong;
@@ -70,15 +70,14 @@ bool Hackdle::guess(std::string guess) {
 
 	this->guesses.emplace_back(std::make_tuple(guess, letter_results));
 
-	return guess == this->correct_answer;
+	if (guess == this->correct_answer)
+		this->complete = true;
 }
 
 bool Hackdle::is_complete() {
 	return this->complete;
 }
 
-//TODO: clear screen 
-//Tyler you should do this, thanks :)
 //Print out guesses with correct coloring
 void Hackdle::print() {
 	for (const auto& guess : this->guesses) {

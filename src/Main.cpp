@@ -56,9 +56,10 @@ int main() {
 					continue;
 			}
 		}
+		TerminalColor::clear();
 		hackdle.print();
 	}
-	std::cout << std::endl;
+	std::cout << "Correct!" << std::endl;
 
 	CloseHandle(stdout_handle);
 	return 0;

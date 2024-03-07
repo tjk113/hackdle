@@ -13,3 +13,7 @@ void TerminalColor::print(std::string string, TerminalColor::Color background, b
 	static std::string reset_sequence = "\033[0m";
 	std::cout << color_sequence << string << reset_sequence;
 }
+
+void TerminalColor::clear() {
+	std::cout << "\033[2J\033[2H\033[1A";
+}
