@@ -43,16 +43,16 @@ int main() {
 		catch (Hackdle::Error e) {
 			switch (e) {
 				case Hackdle::Error::GuessTooShort:
-					std::cout << "Error: guess too short" << std::endl;
+					std::cout << "Error: guess too short...stupid" << std::endl;
 					continue;
 				case Hackdle::Error::GuessTooLong:
-					std::cout << "Error: guess too long" << std::endl;
+					std::cout << "Error: guess too long...learn how to count to five" << std::endl;
 					continue;
 				case Hackdle::Error::InvalidCharacter:
-					std::cout << "Error: invalid character in guess" << std::endl;
+					std::cout << "Error: ngl found an invalid character bro" << std::endl;
 					continue;
 				case Hackdle::Error::NotInWordList:
-					std::cout << "Error: guess not in word list" << std::endl;
+					std::cout << "Error: guess not in word list...get yourself a dictonary and stop being illiterate " << std::endl;
 					continue;
 			}
 		}

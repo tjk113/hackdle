@@ -64,7 +64,7 @@ bool Hackdle::guess(std::string guess) {
 		}
 	}
 
-	if (!is_in_word_list(guess)) {
+	if(!is_in_word_list(guess)){
 		throw Hackdle::Error::NotInWordList;
 	}
 

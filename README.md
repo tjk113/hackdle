@@ -10,4 +10,4 @@ Amazing fun great awesome ransomware that encrypts files and makes you play Word
 - [ ] Clear the screen when guessing
 - [x] ~~Throwing GuessTooShort and NotInWordList errors~~
 - [ ] Make the error messages *fun*
-- [ ] Make the error messages *red*
+- [ ] Make the error messages *red* 
