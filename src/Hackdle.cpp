@@ -55,7 +55,9 @@ void Hackdle::guess(std::string guess) {
 			letter_results[i] = LetterResult::CorrectPosition;
 		}
 		//Check if letter is in word but wrong position
-		else if(correct_answer.find(guess[i]) != std::string::npos){
+		else if(correct_answer.find(guess[i]) != std::string::npos
+			    && std::count(correct_answer.begin(), correct_answer.end(), guess[i]))
+		{
 			letter_results[i] = LetterResult::WrongPosition;
 		}
 		//Check if letter is completely absent
