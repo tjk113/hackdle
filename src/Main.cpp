@@ -5,6 +5,8 @@
 #include <cstring>
 #include <string>
 
+#include "AES.h"
+
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
 
