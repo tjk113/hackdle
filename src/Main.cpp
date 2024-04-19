@@ -1,15 +1,21 @@
 #include <Windows.h>
 
+#include <filesystem>
 #include <algorithm>
 #include <iostream>
 #include <cstring>
 #include <string>
 
+#include <iostream>
+#include <fstream>
+#include <stdint.h>
+
+#include <vector>
+
 #include "AES.h"
 
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
-
 void enable_terminal_escape_sequences(HANDLE stdout_handle) {
 	DWORD console_mode;
 	GetConsoleMode(stdout_handle, &console_mode);
@@ -29,6 +35,7 @@ int randomNum(int min, int max)
 }
 
 int main() {
+	std::vector<unsigned char> key = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
 	// We have to set this console mode to enable ANSI escape sequences
 	HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	enable_terminal_escape_sequences(stdout_handle);
@@ -60,6 +67,22 @@ int main() {
 		}
 		TerminalColor::clear();
 		hackdle.print();
+		AES aes = AES(AESKeyLength::AES_128);
+		// TODO: find random files starting from C:
+		std::vector<unsigned char> plain = {};
+		std::vector<unsigned char> cipher = {};
+
+		for (const auto & entry : std::filesystem::directory_iterator("C:\\Users\\drago\\hackdle\\demo-files"))
+		{
+			plain.clear();
+			std::cout << entry.path() << std::endl;
+			std::ifstream file(entry.path(), std::ios::in | std::ios::binary | std::ios::out);
+			char c[16];
+			while (file.read(c, 16)) {
+				plain.insert(plain.end(), &c[0], &c[15]);
+			}
+			cipher = aes.EncryptECB(plain, key);
+		}
 	}
 	std::cout << "Correct!" << std::endl;
 
