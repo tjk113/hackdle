@@ -44,6 +44,9 @@ void Hackdle::guess(std::string guess) {
 
 	//Initialize letter results array (With respect to memory)
 	std::array<LetterResult, 5> letter_results = {};
+	std::string check_for_multiple_instances = correct_answer;
+	char temp = ' ';
+	int pos = 0;
 
 	for(int i = 0; i < guess.length(); i++){
 		//Throw error if input is not valid
@@ -53,17 +56,28 @@ void Hackdle::guess(std::string guess) {
 		//Check if the letter is correct and in the correct position
 		if(guess[i] == correct_answer[i]){
 			letter_results[i] = LetterResult::CorrectPosition;
+			check_for_multiple_instances[i] = ' ';
 		}
 		//Check if letter is in word but wrong position
-		else if(correct_answer.find(guess[i]) != std::string::npos
-			    && std::count(correct_answer.begin(), correct_answer.end(), guess[i]))
+		else if(check_for_multiple_instances.find(guess[i]) != std::string::npos)
+			//&& std::count(correct_answer.begin(), correct_answer.end(), guess[i])
 		{
 			letter_results[i] = LetterResult::WrongPosition;
+			for(int j = 0; j < check_for_multiple_instances.size(); j++){
+				if(guess[i] == check_for_multiple_instances[j]){
+					temp = check_for_multiple_instances[j];
+					pos = j;
+					check_for_multiple_instances[j] = ' ';
+				}
+			}
 		}
 		//Check if letter is completely absent
 		else {
 			letter_results[i] = LetterResult::Absent;
 		}
+	}
+	if(temp != ' '){
+		check_for_multiple_instances[pos] = temp;
 	}
 
 	if(!is_in_word_list(guess)){

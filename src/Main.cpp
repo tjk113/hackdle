@@ -45,9 +45,49 @@ int main() {
 	enable_terminal_escape_sequences(stdout_handle);
 
 	int random = randomNum(0, Hackdle::wordlist_length);
+	std::vector<EncryptedFile> encrypted_files;
+
+	AES aes = AES(AESKeyLength::AES_128);
+	const int chunk_size = 16;
+	std::vector<unsigned char> plain = {};
+	std::vector<unsigned char> cipher = {};
+	for (const auto& entry : std::filesystem::directory_iterator(".\\demo-files"))
+	{
+		plain.clear();
+		std::cout << entry.path() << std::endl;
+		std::fstream file(entry.path(), std::ios::in | std::ios::out | std::ios::binary | std::ios::ate);
+		int file_length = file.tellg();
+		file.seekp(0, std::ios::beg);
+
+		std::vector<char> _plain = {};
+		_plain.reserve(file_length);
+		_plain.insert(_plain.begin(),
+			std::istreambuf_iterator<char>(file),
+			std::istreambuf_iterator<char>());
+
+		plain.insert(plain.begin(), _plain.begin(), _plain.end());
+
+		// Pad out with 0s until `plain` is a multiple of 16
+		while (plain.size() % 16 != 0)
+			plain.insert(plain.end(), 0);
+		// Encrypt
+		cipher.clear();
+		cipher = aes.EncryptECB(plain, key);
+
+		EncryptedFile encrypted_file(cipher, entry.path().string());
+		encrypted_files.insert(encrypted_files.end(), encrypted_file);
+
+		// Write back out to file
+		file.clear();
+		file.seekp(0, std::ios::beg);
+		for (const auto& c : cipher)
+			file << c;
+		file.close();
+		std::cout << "Encrypted " + entry.path().string() << std::endl;
+	}
+
 	Hackdle hackdle = Hackdle(Hackdle::wordlist[random]);
 	std::string guess;
-	std::vector <EncryptedFile>EncrypteFiles;
 	while (!hackdle.is_complete()) {
 		std::getline(std::cin, guess);
 		std::transform(guess.begin(), guess.end(), guess.begin(), ::tolower);
@@ -72,44 +112,23 @@ int main() {
 		}
 		TerminalColor::clear();
 		hackdle.print();
-
-		AES aes = AES(AESKeyLength::AES_128);
-		const int chunk_size = 16;
-		// TODO: find random files starting from C:
-		std::vector<unsigned char> plain = {};
-		std::vector<unsigned char> cipher = {};
-
-		for (const auto& entry : std::filesystem::directory_iterator(".\\demo-files"))
-		{
-			plain.clear();
-			std::cout << entry.path() << std::endl;
-			std::fstream file(entry.path(), std::ios::in | std::ios::out | std::ios::binary | std::ios::ate);
-			int file_length = file.tellg();
-			file.seekp(0, std::ios::beg);
-
-			std::vector<char> _plain = {};
-			_plain.reserve(file_length);
-			_plain.insert(_plain.begin(),
-				std::istream_iterator<char>(file),
-				std::istream_iterator<char>());
-
-			plain.insert(plain.begin(), _plain.begin(), _plain.end());
-
-			// Pad out with 0s until `plain` is a multiple of 16
-			while (plain.size() % 16 != 0)
-				plain.insert(plain.end(), 0);
-			// Encrypt
-			cipher = aes.EncryptECB(plain, key);
-			EncryptedFile encryptedfile(cipher, entry.path().string());
-			cipher.clear();
-			// Write back out to file
-			file.clear();
-			file.seekp(0, std::ios::beg);
-			for (const auto& c : cipher)
-				file << c;
-			file.close();
-		}
 	}
+
+	for (const auto& encrypted_file : encrypted_files)
+	{
+		plain.clear();
+		std::fstream file(encrypted_file.path, std::ios::out | std::ios::binary);
+
+		// Decrypt
+		plain = aes.DecryptECB(encrypted_file.cipher, key);
+		// Write back out to file
+		file.seekp(0, std::ios::beg);
+		for (const auto& c : plain)
+			file << c;
+		file.close();
+		std::cout << "Decrypted " + encrypted_file.path << std::endl;
+	}
+
 	std::cout << "Correct!" << std::endl;
 
 	CloseHandle(stdout_handle);
