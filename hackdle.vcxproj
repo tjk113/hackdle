@@ -19,12 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EncryptedFile.cpp" />
     <ClCompile Include="src\Hackdle.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\TerminalColor.cpp" />
     <ClCompile Include="src\wordlist.cpp" />
+    <ClCompile Include="third-party\AES\src\AES.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\EncryptedFile.hpp" />
     <ClInclude Include="include\Hackdle.hpp" />
     <ClInclude Include="include\TerminalColor.hpp" />
   </ItemGroup>
@@ -85,6 +88,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)/third-party/AES/src</ExternalIncludePath>
+    <SourcePath>$(VC_SourcePath);$(ProjectDir)/third-party/AES/src</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
