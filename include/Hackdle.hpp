@@ -1,12 +1,12 @@
 #pragma once
 
+#include <algorithm>
+#include <cstring>
 #include <string>
 #include <vector>
 #include <tuple>
 #include <array>
 #include <map>
-#include <cstring>
-#include <algorithm>
 
 class Hackdle {
 public:
@@ -24,6 +24,7 @@ public:
 	static constexpr int wordlist_length = 14855;
 	static const std::string wordlist[wordlist_length];
 private:
+	static std::array<std::tuple<char, bool>, 26> letters_guessed;
 	std::vector<std::tuple<std::string, std::array<LetterResult,5>>> guesses;
 	std::string correct_answer;
 	bool complete;
@@ -34,4 +35,5 @@ public:
 	void print();
 	void guess(std::string guess);
 	bool is_complete();
+	std::string get_correct_answer();
 };

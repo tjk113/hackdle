@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+
 struct EncryptedFile {
 	std::vector<unsigned char>cipher;
 		std::string path;

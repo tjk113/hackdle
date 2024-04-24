@@ -3,23 +3,20 @@
 #include <filesystem>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <cstring>
+#include <cstdint>
+#include <vector>
 #include <string>
 #include <array>
-
-#include <iostream>
-#include <fstream>
-#include <stdint.h>
-
-#include <vector>
 
 #include "AES.h"
 
 #include "EncryptedFile.hpp"
-
 #include "TerminalColor.hpp"
 #include "Hackdle.hpp"
+
 void enable_terminal_escape_sequences(HANDLE stdout_handle) {
 	DWORD console_mode;
 	GetConsoleMode(stdout_handle, &console_mode);
@@ -39,12 +36,11 @@ int randomNum(int min, int max)
 }
 
 int main() {
-	std::vector<unsigned char> key = { 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f };
+	std::vector<unsigned char> key = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 	// We have to set this console mode to enable ANSI escape sequences
 	HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	enable_terminal_escape_sequences(stdout_handle);
 
-	int random = randomNum(0, Hackdle::wordlist_length);
 	std::vector<EncryptedFile> encrypted_files;
 
 	AES aes = AES(AESKeyLength::AES_128);
@@ -53,23 +49,20 @@ int main() {
 	std::vector<unsigned char> cipher = {};
 	for (const auto& entry : std::filesystem::directory_iterator(".\\demo-files"))
 	{
-		plain.clear();
-		std::cout << entry.path() << std::endl;
 		std::fstream file(entry.path(), std::ios::in | std::ios::out | std::ios::binary | std::ios::ate);
 		int file_length = file.tellg();
 		file.seekp(0, std::ios::beg);
 
-		std::vector<char> _plain = {};
-		_plain.reserve(file_length);
-		_plain.insert(_plain.begin(),
+		// Read in plaintext from file
+		plain.clear();
+		plain.reserve(file_length);
+		plain.insert(plain.begin(),
 			std::istreambuf_iterator<char>(file),
 			std::istreambuf_iterator<char>());
-
-		plain.insert(plain.begin(), _plain.begin(), _plain.end());
-
 		// Pad out with 0s until `plain` is a multiple of 16
 		while (plain.size() % 16 != 0)
 			plain.insert(plain.end(), 0);
+
 		// Encrypt
 		cipher.clear();
 		cipher = aes.EncryptECB(plain, key);
@@ -83,10 +76,11 @@ int main() {
 		for (const auto& c : cipher)
 			file << c;
 		file.close();
-		std::cout << "Encrypted " + entry.path().string() << std::endl;
 	}
+	std::cout << "Your files have been encrypted! Guess a word to win them back! " << std::endl;
 
-	Hackdle hackdle = Hackdle(Hackdle::wordlist[random]);
+	int random = randomNum(0, Hackdle::wordlist_length);
+	Hackdle hackdle = Hackdle("steep");
 	std::string guess;
 	while (!hackdle.is_complete()) {
 		std::getline(std::cin, guess);
@@ -116,20 +110,21 @@ int main() {
 
 	for (const auto& encrypted_file : encrypted_files)
 	{
-		plain.clear();
 		std::fstream file(encrypted_file.path, std::ios::out | std::ios::binary);
 
 		// Decrypt
+		plain.clear();
 		plain = aes.DecryptECB(encrypted_file.cipher, key);
 		// Write back out to file
 		file.seekp(0, std::ios::beg);
 		for (const auto& c : plain)
 			file << c;
 		file.close();
-		std::cout << "Decrypted " + encrypted_file.path << std::endl;
 	}
-
-	std::cout << "Correct!" << std::endl;
+	std::string ca = hackdle.get_correct_answer();
+	TerminalColor::clear();
+	TerminalColor::print(std::format(" {}  {}  {}  {}  {} ", ca[0], ca[1], ca[2], ca[3], ca[4]), TerminalColor::Green);
+	std::cout << std::endl << "Correct! Your files have been decrypted." << std::endl;
 
 	CloseHandle(stdout_handle);
 	return 0;
